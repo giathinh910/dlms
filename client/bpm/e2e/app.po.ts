@@ -6,6 +6,6 @@ export class BpmPage {
   }
 
   getParagraphText() {
-    return element(by.css('app-root h1')).getText();
+    return element(by.css('bpm-root h1')).getText();
   }
 }
