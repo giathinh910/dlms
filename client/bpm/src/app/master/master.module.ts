@@ -5,10 +5,11 @@ import { PageHeadingComponent } from './page-heading/page-heading.component';
 import { FooterComponent } from './footer/footer.component';
 
 @NgModule({
-  imports: [
-    CommonModule
-  ],
-  declarations: [TopNavComponent, PageHeadingComponent, FooterComponent],
-  exports:[TopNavComponent, PageHeadingComponent, FooterComponent]
+    imports: [
+        CommonModule
+    ],
+    declarations: [ TopNavComponent, PageHeadingComponent, FooterComponent ],
+    exports: [ TopNavComponent, PageHeadingComponent, FooterComponent ]
 })
-export class MasterModule { }
+export class MasterModule {
+}

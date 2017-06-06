@@ -9,32 +9,32 @@ import { CourseComponent } from './course.component';
 
 
 const routes: Routes = [
-  {
-    path: 'course',
-    component: CourseComponent,
-    children: [
-      {
-        path: '',
-        component: CourseDetailComponent
-      },
-      {
-        path: 'detail',
-        component: CourseDetailComponent
-      },
-    ]
-  }
+    {
+        path: 'course',
+        component: CourseComponent,
+        children: [
+            {
+                path: '',
+                component: CourseDetailComponent
+            },
+            {
+                path: 'detail',
+                component: CourseDetailComponent
+            },
+        ]
+    }
 ];
 @NgModule({
-  imports: [
-    CommonModule,
-    RouterModule.forChild(routes)
-  ],
-  declarations: [
-    CourseDetailComponent,
-    LessonListComponent,
-    LessonDetailComponent,
-    CourseComponent
-  ]
+    imports: [
+        CommonModule,
+        RouterModule.forChild(routes)
+    ],
+    declarations: [
+        CourseDetailComponent,
+        LessonListComponent,
+        LessonDetailComponent,
+        CourseComponent
+    ]
 })
 export class CourseModule {
 }

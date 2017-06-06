@@ -1,15 +1,16 @@
 import { Component, OnInit } from '@angular/core';
 
 @Component({
-  selector: 'bpm-top-nav',
-  templateUrl: './top-nav.component.html',
-  styleUrls: ['./top-nav.component.scss']
+    selector: 'bpm-top-nav',
+    templateUrl: './top-nav.component.html',
+    styleUrls: [ './top-nav.component.scss' ]
 })
 export class TopNavComponent implements OnInit {
 
-  constructor() { }
+    constructor() {
+    }
 
-  ngOnInit() {
-  }
+    ngOnInit() {
+    }
 
 }

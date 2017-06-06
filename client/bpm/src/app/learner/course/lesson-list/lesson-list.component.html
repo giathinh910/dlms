@@ -1,39 +1,39 @@
 <div class="tb-lesson-list">
-  <ul class="nav nav-tabs" id="myTab" role="tablist">
-    <li class="nav-item">
-      <a class="nav-link" [ngClass]="{'active':tabs.tab1.active}" href="#lessonsTab"
-         (click)="onTabChange($event,'tab1');"
-         aria-controls="lessonsTab">Contents
-      </a>
-    </li>
-    <li class="nav-item">
-      <a class="nav-link" [ngClass]="{'active':tabs.tab2.active}" href="#notebookTab" aria-controls="notebookTab"
-         (click)="onTabChange($event,'tab2')">Notebook
-      </a>
-    </li>
-  </ul>
-
-  <div class="tab-content">
-    <div class="entry-lessons-tab tab-pane" [ngClass]="{'active':tabs.tab1.active}" *ngIf="tabs.tab1.active">
-      <div class="entry-search">
-        <input class="form-control" type="text" placeholder="Search this course ...">
-        <button><i class="fa fa-search"></i></button>
-      </div>
-
-      <div class="entry-lessons-group" *ngFor="let lessonGroup of lessons; let groupIndex = index">
-        <div class="entry-group-title">{{groupIndex+1}}. {{lessonGroup.Name}}</div>
-        <ul>
-          <li class="entry-lesson" *ngFor="let lesson of lessonGroup.Lessons">
-            <a href="#" (click)="onLessonClick(lesson); $event.preventDefault()">
-              <div class="entry-lesson-title">{{lesson.Name}}</div>
-              <small class="entry-time">{{convertTime(lesson.Duration)}}</small>
-              <span class="entry-is-seen" *ngIf="lesson.Seen"><i class="fa fa-eye "></i></span>
+    <ul class="nav nav-tabs" id="myTab" role="tablist">
+        <li class="nav-item">
+            <a class="nav-link" [ngClass]="{'active':tabs.tab1.active}" href="#lessonsTab"
+               (click)="onTabChange($event,'tab1');"
+               aria-controls="lessonsTab">Contents
             </a>
-          </li>
-        </ul>
-      </div>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" [ngClass]="{'active':tabs.tab2.active}" href="#notebookTab" aria-controls="notebookTab"
+               (click)="onTabChange($event,'tab2')">Notebook
+            </a>
+        </li>
+    </ul>
 
+    <div class="tab-content">
+        <div class="entry-lessons-tab tab-pane" [ngClass]="{'active':tabs.tab1.active}" *ngIf="tabs.tab1.active">
+            <div class="entry-search">
+                <input class="form-control" type="text" placeholder="Search this course ...">
+                <button><i class="fa fa-search"></i></button>
+            </div>
+
+            <div class="entry-lessons-group" *ngFor="let lessonGroup of lessons; let groupIndex = index">
+                <div class="entry-group-title">{{groupIndex+1}}. {{lessonGroup.Name}}</div>
+                <ul>
+                    <li class="entry-lesson" *ngFor="let lesson of lessonGroup.Lessons">
+                        <a href="#" (click)="onLessonClick(lesson); $event.preventDefault()">
+                            <div class="entry-lesson-title">{{lesson.Name}}</div>
+                            <small class="entry-time">{{convertTime(lesson.Duration)}}</small>
+                            <span class="entry-is-seen" *ngIf="lesson.Seen"><i class="fa fa-eye "></i></span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
+        </div>
+        <div class="tab-pane" [ngClass]="{'active':tabs.tab2.active}" *ngIf="tabs.tab2.active">...</div>
     </div>
-    <div class="tab-pane" [ngClass]="{'active':tabs.tab2.active}" *ngIf="tabs.tab2.active">...</div>
-  </div>
 </div>

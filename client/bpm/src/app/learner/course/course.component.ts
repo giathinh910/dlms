@@ -1,15 +1,16 @@
 import { Component, OnInit } from '@angular/core';
 
 @Component({
-  selector: 'bpm-course',
-  templateUrl: './course.component.html',
-  styleUrls: ['./course.component.scss']
+    selector: 'bpm-course',
+    templateUrl: './course.component.html',
+    styleUrls: [ './course.component.scss' ]
 })
 export class CourseComponent implements OnInit {
 
-  constructor() { }
+    constructor() {
+    }
 
-  ngOnInit() {
-  }
+    ngOnInit() {
+    }
 
 }
