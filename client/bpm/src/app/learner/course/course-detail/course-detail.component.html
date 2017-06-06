@@ -1,5 +1,10 @@
-<p>
-  course-detail works!
-</p>
-<bpm-lesson-detail></bpm-lesson-detail>
-<bpm-lesson-list></bpm-lesson-list>
+<div class="container">
+  <div class="row">
+    <div class="col-xs-12 col-sm-4">
+      <bpm-lesson-list (onLessonSelected)="onLessonSelected($event)"></bpm-lesson-list>
+    </div>
+    <div class="col-xs-12 col-sm-8">
+      <bpm-lesson-detail></bpm-lesson-detail>
+    </div>
+  </div>
+</div>

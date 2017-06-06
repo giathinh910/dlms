@@ -12,4 +12,7 @@ export class LessonDetailComponent implements OnInit {
   ngOnInit() {
   }
 
+  getLesson(lesson){
+    console.log(lesson)
+  }
 }
