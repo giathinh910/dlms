@@ -8,6 +8,7 @@ import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
 import { CourseModule } from './learner/course/course.module';
 import { MasterModule } from './master/master.module';
+import { AuthModule } from './auth/auth.module';
 
 @NgModule({
     declarations: [
@@ -19,7 +20,8 @@ import { MasterModule } from './master/master.module';
         HttpModule,
         AppRoutingModule,
         CourseModule,
-        MasterModule
+        MasterModule,
+        AuthModule
     ],
     providers: [],
     bootstrap: [ AppComponent ]
