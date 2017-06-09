@@ -1,0 +1,36 @@
+version: "3"
+networks:
+  isolated-network:
+services:
+  mongo:
+    image: mongo
+    ports:
+      - "27017:27017"
+    networks:
+      - isolated-network
+  server:
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    volumes:
+      - ./server:/usr/src/app
+      - /usr/src/app/node_modules
+    ports:
+      - "3000:3000"
+    depends_on:
+      - "mongo"
+    environment:
+      - DEBUG=server:*
+    networks:
+      - isolated-network
+  bpm:
+    build:
+      context: ./client/bpm
+      dockerfile: Dockerfile
+    volumes:
+      - ./client/bpm:/usr/src/app
+      - /usr/src/app/node_modules
+    ports:
+      - "3001:4200"
+    networks:
+      - isolated-network
