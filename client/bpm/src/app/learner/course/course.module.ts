@@ -6,20 +6,24 @@ import { CourseDetailComponent } from '../../learner/course/course-detail/course
 import { LessonListComponent } from '../../learner/course/lesson-list/lesson-list.component';
 import { LessonDetailComponent } from '../../learner/course/lesson-detail/lesson-detail.component';
 import { CourseComponent } from './course.component';
+import { AuthGuardService } from "../../auth/services/auth-guard.service";
 
 
 const routes: Routes = [
     {
         path: 'course',
         component: CourseComponent,
+        canActivate: [AuthGuardService],
         children: [
             {
                 path: '',
-                component: CourseDetailComponent
+                component: CourseDetailComponent,
+                canActivate: [AuthGuardService]
             },
             {
                 path: 'detail',
-                component: CourseDetailComponent
+                component: CourseDetailComponent,
+                canActivate: [AuthGuardService]
             },
         ]
     }
@@ -34,6 +38,9 @@ const routes: Routes = [
         LessonListComponent,
         LessonDetailComponent,
         CourseComponent
+    ],
+    providers: [
+        AuthGuardService
     ]
 })
 export class CourseModule {

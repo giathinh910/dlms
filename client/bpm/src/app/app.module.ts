@@ -9,6 +9,8 @@ import { AppRoutingModule } from './app-routing.module';
 import { CourseModule } from './learner/course/course.module';
 import { MasterModule } from './master/master.module';
 import { AuthModule } from './auth/auth.module';
+import { StorageService } from "./global/services/storage.service";
+import { JwtConfigModule } from "./global/jwt-config.module";
 
 @NgModule({
     declarations: [
@@ -19,12 +21,17 @@ import { AuthModule } from './auth/auth.module';
         FormsModule,
         HttpModule,
         AppRoutingModule,
+        JwtConfigModule,
+        AuthModule,
         CourseModule,
-        MasterModule,
-        AuthModule
+        MasterModule
     ],
-    providers: [],
-    bootstrap: [ AppComponent ]
+    providers: [
+        StorageService
+    ],
+    bootstrap: [
+        AppComponent
+    ]
 })
 export class AppModule {
 }

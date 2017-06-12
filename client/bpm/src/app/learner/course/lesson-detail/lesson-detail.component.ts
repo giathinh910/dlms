@@ -14,6 +14,6 @@ export class LessonDetailComponent implements OnInit {
     }
 
     getLesson(lesson) {
-        console.log(lesson)
+        console.log(lesson);
     }
 }
