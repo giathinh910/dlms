@@ -1,0 +1,108 @@
+@import "../../../scss/style";
+
+.tb-sticky-chat-friends,
+.tb-sticky-chat-contact {
+  position: fixed;
+  bottom: 0;
+  right: 10px;
+  background: #e9ebee;
+  box-shadow: $dropdown-box-shadow;
+  width: ptr(250);
+  overflow: hidden;
+  border-top-left-radius: $border-radius;
+  border-top-right-radius: $border-radius;
+  .entry-collapse {
+    overflow: hidden;
+  }
+  .entry-header {
+    background: $app-primary-color;
+    color: #fff;
+    padding: ptr(5) ptr(15);
+    cursor: pointer;
+    .entry-title {
+      line-height: ptr(30);
+      i {
+        margin-right: 5px;
+      }
+    }
+    .entry-close {
+      color: rgba(#fff, .5);
+      font-size: ptr(20);
+      line-height: ptr(30);
+      &:hover {
+        color: rgba(#fff, .9);
+      }
+    }
+  }
+  .entry-contact-list {
+    max-height: ptr(300);
+    overflow-y: scroll;
+    .entry-contact-list-title {
+      padding: ptr(10) ptr(15) 0;
+      font-weight: 600;
+    }
+    > .entry-scroll {
+      padding: ptr(10) 0;
+    }
+    .entry-contact {
+      $entry-padding: 15;
+      $avatar-width: 40;
+      position: relative;
+      min-height: ptr($avatar-width);
+      padding: ptr($entry-padding) ptr($entry-padding) ptr($entry-padding) ptr($avatar-width + 30);
+      cursor: pointer;
+      .entry-avatar {
+        width: ptr($avatar-width);
+        height: ptr($avatar-width);
+        position: absolute;
+        top: ptr($entry-padding/2 - 1);
+        left: ptr($entry-padding);
+        overflow: hidden;
+        border: 1px solid #fff;
+        img {
+        }
+      }
+      .entry-status {
+        display: block;
+        width: ptr(10);
+        height: ptr(10);
+        position: absolute;
+        top: ptr($entry-padding);
+        right: ptr(15);
+        background: transparent;
+        border-radius: 50%;
+        &.is-online {
+          background: $green;
+        }
+      }
+      &:hover {
+        background: #fff;
+      }
+    }
+  }
+  .entry-search {
+    $padding: 10;
+    padding: ptr($padding);
+    border-top: 1px solid #dddfe2;
+    position: relative;
+    .entry-form {
+      input[type="text"] {
+        display: block;
+        width: 100%;
+        border: none;
+        outline: none;
+        background: transparent;
+      }
+      button {
+        position: absolute;
+        top: ptr($padding);
+        right: ptr($padding);
+        bottom: ptr($padding);
+        width: ptr(34);
+        border: none;
+        background: transparent;
+        color: $gray-light
+      }
+    }
+  }
+}

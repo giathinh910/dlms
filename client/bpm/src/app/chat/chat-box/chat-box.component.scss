@@ -1,0 +1,69 @@
+@import "../../../scss/style";
+
+.tb-sticky-chat {
+  position: fixed;
+  bottom: 0;
+  right: 18rem;
+  background: #e9ebee;
+  box-shadow: $dropdown-box-shadow;
+  width: ptr(250);
+  overflow: hidden;
+  border-top-left-radius: $border-radius;
+  border-top-right-radius: $border-radius;
+  .entry-collapse {
+    overflow: hidden;
+  }
+  .entry-header {
+    background: $app-primary-color;
+    color: #fff;
+    padding: ptr(5) ptr(15);
+    cursor: pointer;
+    .entry-title {
+      line-height: ptr(30);
+      i {
+        margin-right: 5px;
+      }
+    }
+    .entry-close {
+      color: rgba(#fff, .5);
+      font-size: ptr(20);
+      line-height: ptr(30);
+      &:hover {
+        color: rgba(#fff, .9);
+      }
+    }
+  }
+  .entry-messages {
+    height: ptr(250);
+    padding: .5rem;
+    overflow-y: scroll;
+    .entry-message {
+      padding: .3rem 0;
+    }
+  }
+  .entry-message-sender {
+    $padding: 10;
+    padding: ptr($padding);
+    border-top: 1px solid #dddfe2;
+    position: relative;
+    .entry-form {
+      input[type="text"] {
+        display: block;
+        width: 100%;
+        border: none;
+        outline: none;
+        background: transparent;
+      }
+      button {
+        position: absolute;
+        top: ptr($padding);
+        right: ptr($padding);
+        bottom: ptr($padding);
+        width: ptr(34);
+        border: none;
+        background: transparent;
+        color: $gray-light
+      }
+    }
+  }
+}

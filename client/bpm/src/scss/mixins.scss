@@ -1,0 +1,39 @@
+@import 'variables';
+
+@function ptr($value-in-px) {
+  @return ($value-in-px / ($app-base-font-size / 1px)) + rem;
+}
+
+@mixin app-font-size($font-size-in-px) {
+  font-size: $font-size-in-px + px;
+  font-size: ptr($font-size-in-px);
+}
+
+@mixin fa($icon) {
+  display: inline-block;
+  font: normal normal normal 14px/1 FontAwesome;
+  font-size: inherit;
+  text-rendering: auto;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  content: $icon;
+}
+
+@mixin placeholder($color) {
+  // Firefox 4-18
+  &:-moz-placeholder {
+    color: $color;
+  }
+  // Firefox 19+
+  &::-moz-placeholder {
+    color: $color;
+  }
+  // Internet Explorer 10+
+  &:-ms-input-placeholder {
+    color: $color;
+  }
+  // Safari and Chrome
+  &::-webkit-input-placeholder {
+    color: $color;
+  }
+}

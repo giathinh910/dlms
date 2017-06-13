@@ -11,6 +11,7 @@ import { MasterModule } from './master/master.module';
 import { AuthModule } from './auth/auth.module';
 import { StorageService } from "./global/services/storage.service";
 import { JwtConfigModule } from "./global/jwt-config.module";
+import { ChatModule } from "./chat/chat.module";
 
 @NgModule({
     declarations: [
@@ -24,7 +25,8 @@ import { JwtConfigModule } from "./global/jwt-config.module";
         JwtConfigModule,
         AuthModule,
         CourseModule,
-        MasterModule
+        MasterModule,
+        ChatModule
     ],
     providers: [
         StorageService

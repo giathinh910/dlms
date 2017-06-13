@@ -1,0 +1,8 @@
+<bpm-chat-contact (onUserClicked)="getSelectedUser($event)"></bpm-chat-contact>
+
+<bpm-chat-box
+        *ngFor="let chatUser of chatUsers; let chatUserIndex = index"
+        [user]="chatUser"
+        [userIndex]="chatUserIndex"
+        (onCloseButtonClicked)="removeChatBox($event)"
+></bpm-chat-box>
