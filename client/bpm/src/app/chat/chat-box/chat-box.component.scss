@@ -38,7 +38,22 @@
     padding: .5rem;
     overflow-y: scroll;
     .entry-message {
-      padding: .3rem 0;
+      margin-bottom: .7rem;
+      .entry-message-inner {
+        max-width: 85%;
+        display: inline-block;
+        background: #fff;
+        border-radius: $border-radius;
+        padding: .3rem .5rem;
+        box-shadow: 0 0 5px 0 rgba(0,0,0,.1);
+      }
+      &.is-me {
+        text-align: right;
+        .entry-message-inner {
+          background: $blue;
+          color: #fff;
+        }
+      }
     }
   }
   .entry-message-sender {

@@ -106,3 +106,14 @@
     }
   }
 }
+
+.entry-title {
+  i {
+    &.is-gray {
+      color: #bbbbbb;
+    }
+    &.is-green {
+      color: #0df959;
+    }
+  }
+}

@@ -32,6 +32,7 @@ app.use('/users', require('./routes/users'));
 
 app.use('/api', require('./routes/api/cors'));
 app.use('/api/learner/auth', require('./routes/api/learner/auth'));
+app.use('/api/learner/rooms', require('./routes/api/learner/rooms'));
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

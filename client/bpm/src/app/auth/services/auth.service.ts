@@ -5,6 +5,7 @@ import 'rxjs/add/operator/toPromise';
 import { tokenNotExpired } from "angular2-jwt";
 import { StorageService } from "../../global/services/storage.service";
 import { Router } from "@angular/router";
+import { ChatService } from "../../chat/services/chat.service";
 
 @Injectable()
 export class AuthService {
@@ -13,7 +14,8 @@ export class AuthService {
 
     constructor(private http: Http,
                 private storageService: StorageService,
-                private router: Router) {
+                private router: Router,
+                private chatService: ChatService) {
         //
     }
 
@@ -39,6 +41,7 @@ export class AuthService {
 
     logout() {
         this.storageService.clear();
+        this.chatService.closeSocket();
         this.router.navigateByUrl('/login');
     }
 

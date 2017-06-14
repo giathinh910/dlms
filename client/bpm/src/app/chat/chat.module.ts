@@ -1,8 +1,9 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { ChatService } from "./services/chat.service";
+import { ChatComponent } from './chat.component';
 import { ChatContactComponent } from './chat-contact/chat-contact.component';
 import { ChatBoxComponent } from './chat-box/chat-box.component';
-import { ChatComponent } from './chat.component';
 
 @NgModule({
     imports: [
@@ -15,6 +16,9 @@ import { ChatComponent } from './chat.component';
     ],
     exports: [
         ChatComponent
+    ],
+    providers: [
+        ChatService
     ]
 })
 export class ChatModule {

@@ -5,5 +5,6 @@
 
 export const environment = {
     production: false,
-    apiUrl: 'http://localhost:3000/api/learner'
+    apiUrl: 'http://localhost:3000/api/learner',
+    chatSocketUrl: 'http://localhost:3000/ws/chat'
 };

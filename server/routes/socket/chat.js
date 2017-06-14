@@ -4,7 +4,7 @@ var config = require('../../config');
 var _ = require('lodash');
 var util = require('util');
 
-var onlineUsers = [
+var onlineLearners = [
     // {
     //     sockets: [],
     //     user: {
@@ -40,6 +40,67 @@ module.exports = function (io) {
         var decoded = jwt.decode(socket.request._query['token'], {complete: true}),
             decodedUser = decoded.payload;
 
-        //
+        handleLearnerChat(socket);
     });
 };
+
+function handleLearnerChat(socket) {
+    console.log('an learner connected');
+
+    // request init data
+    socket.on('request init data for learner', function () {
+        socket.emit('respond init data for learner', {
+            onlineLearners: onlineLearners
+        });
+    });
+
+    // get learner info from token
+    var decoded = jwt.decode(socket.request._query['token'], {complete: true}),
+        decodedUser = decoded.payload;
+
+    // check if learner is online
+    var onlineLearnerIndex = _.findIndex(onlineLearners, function (onlineLearner) {
+        return onlineLearner.user._id === decodedUser._id;
+    });
+
+    // case learner hasn't existed, create new
+    if (onlineLearnerIndex === -1) {
+        onlineLearners.push({
+            sockets: [socket.id],
+            user: decodedUser
+        });
+        socket.broadcast.emit('a learner comes online', decodedUser);
+        console.log('a learner comes online');
+    }
+    // case learner existed, just push socket id
+    else {
+        onlineLearners[onlineLearnerIndex].sockets.push(socket.id)
+    }
+
+    console.log('online learners', util.inspect(onlineLearners, {showHidden: false, depth: null}));
+
+    /*=== WHEN THIS LEARNER GOES OFFLINE ===*/
+    socket.on('disconnect', function () {
+        console.log('a learner disconnected', socket.id);
+
+        // find the online learner by socket.id
+        var onlineLearnerIndex = _.findIndex(onlineLearners, function (onlineLearner) {
+            if (_.indexOf(onlineLearner.sockets, socket.id) !== -1)
+                return true;
+        });
+
+        // find socket id index by socket.id
+        var onlineLearnerSocketIndex = _.indexOf(onlineLearners[onlineLearnerIndex].sockets, socket.id);
+
+        // remove the socket.id from that learner
+        onlineLearners[onlineLearnerIndex].sockets.splice(onlineLearnerSocketIndex, 1);
+
+        // if sum of socket id of that learner equals 0, then remove that user (come offline)
+        if (onlineLearners[onlineLearnerIndex].sockets.length === 0) {
+            socket.broadcast.emit('a learner comes offline', onlineLearners[onlineLearnerIndex].user);
+            onlineLearners.splice(onlineLearnerIndex, 1);
+        }
+
+        console.log('learners', util.inspect(onlineLearners, {showHidden: false, depth: null}));
+    });
+}

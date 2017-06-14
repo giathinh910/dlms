@@ -13,7 +13,11 @@ var roomSchema = new Schema(
             type: Schema.Types.ObjectId,
             ref: 'User',
             required: true
-        }]
+        }],
+        isDirectRoom: {
+            type: Boolean,
+            required: true
+        }
     },
     {
         timestamps: true
@@ -39,6 +43,61 @@ Room.getOneByCustomerId = function (customerId, callback) {
         .exec(function (err, r) {
             callback(err, r);
         })
+};
+
+// check if room existed, if it did, return room, else create room
+Room.createOrGetDirectRoom = function (data, callback) {
+    if (data.reqUserId === data.learnerIdToChat) {
+        callback({
+            error: 'TuKyAhDcm'
+        });
+        return;
+    }
+    async.waterfall([
+        function (callback) {
+            Room
+                .findOne({
+                    isDirectRoom: true,
+                    users: {
+                        $in: data.usersInRoom
+                    }
+                })
+                .exec(function (err, room) {
+                    if (err)
+                        return callback(err, null);
+                    else {
+                        if (room)
+                            return callback('RoomExisted', room); // trick to break waterfall
+                        else
+                            callback(null, null)
+                    }
+                })
+        },
+        function (foo, callback) {
+            Room.create({
+                name: '',
+                users: data.usersInRoom,
+                isDirectRoom: true
+            }, function (err, room) {
+                if (err)
+                    callback(err, null);
+                else
+                    callback(null, room)
+            })
+        }
+    ], function (err, room) {
+        if (err === 'RoomExisted')
+            User.findById(data.learnerIdToChat, function (err, user) {
+                if (err)
+                    callback(err, null);
+                else {
+                    room.displayName = user.displayName;
+                    callback(null, room);
+                }
+            });
+        else
+            callback(err, room);
+    });
 };
 
 module.exports = Room;

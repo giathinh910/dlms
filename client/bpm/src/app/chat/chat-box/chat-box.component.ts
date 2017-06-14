@@ -24,7 +24,7 @@ export class ChatBoxComponent implements OnInit, OnChanges {
     }
 
     calculatePosition() {
-        this.cssRight = (this.userIndex + 1) * 18 + 1;
+        this.cssRight = (this.userIndex + 1) * 18 + 1; //rem
     }
 
     onHeaderClick() {

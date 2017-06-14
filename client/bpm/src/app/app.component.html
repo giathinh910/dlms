@@ -6,4 +6,4 @@
 
 <bpm-footer></bpm-footer>
 
-<bpm-chat></bpm-chat>
+<bpm-chat *ngIf="authService.loggedIn()"></bpm-chat>

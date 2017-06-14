@@ -1,4 +1,6 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { ChatService } from "../services/chat.service";
+import { StorageService } from "../../global/services/storage.service";
 
 @Component({
     selector: 'bpm-chat-contact',
@@ -6,44 +8,13 @@ import { Component, EventEmitter, OnInit, Output } from '@angular/core';
     styleUrls: ['./chat-contact.component.scss']
 })
 export class ChatContactComponent implements OnInit {
+    connectionStatus = false;
     displayState = false;
-
     @Output() onUserClicked = new EventEmitter<any>();
+    onlineLearners: any[] = [];
 
-    onlineUsers: any[] = [
-        {
-            _id: 1,
-            displayName: 'Donald Trump',
-            online: true
-        },
-        {
-            _id: 2,
-            displayName: 'Barrack Obama',
-            online: false
-        },
-        {
-            _id: 3,
-            displayName: 'George Bush',
-            online: false
-        },
-        {
-            _id: 4,
-            displayName: 'Donald Trump',
-            online: true
-        },
-        {
-            _id: 5,
-            displayName: 'Barrack Obama',
-            online: false
-        },
-        {
-            _id: 6,
-            displayName: 'George Bush',
-            online: false
-        }
-    ];
-
-    constructor() {
+    constructor(private chatService: ChatService,
+                public storageService: StorageService) {
     }
 
     ngOnInit() {
@@ -53,7 +24,10 @@ export class ChatContactComponent implements OnInit {
         this.displayState = !this.displayState;
     }
 
-    onUserClick(user) {
-        this.onUserClicked.emit(user);
+    onUserClick(onlineUser) {
+        this.chatService.createOrGetRoom(onlineUser.user._id).then(room => {
+            console.log(room);
+            this.onUserClicked.emit(room);
+        });
     }
 }
