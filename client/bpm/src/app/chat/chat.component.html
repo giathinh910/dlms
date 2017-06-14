@@ -2,7 +2,7 @@
 
 <bpm-chat-box
         *ngFor="let chatRoom of chatRooms; let chatRoomIndex = index"
-        [user]="chatRoom"
-        [userIndex]="chatRoomIndex"
+        [room]="chatRoom"
+        [roomIndex]="chatRoomIndex"
         (onCloseButtonClicked)="removeChatBox($event)"
 ></bpm-chat-box>

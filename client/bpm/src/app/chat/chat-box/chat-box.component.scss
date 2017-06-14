@@ -78,6 +78,9 @@
         border: none;
         background: transparent;
         color: $gray-light
+        &[disabled] {
+          color: $gray-lightest
+        }
       }
     }
   }

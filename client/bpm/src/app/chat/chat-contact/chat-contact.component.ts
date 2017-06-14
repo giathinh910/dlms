@@ -26,7 +26,6 @@ export class ChatContactComponent implements OnInit {
 
     onUserClick(onlineUser) {
         this.chatService.createOrGetRoom(onlineUser.user._id).then(room => {
-            console.log(room);
             this.onUserClicked.emit(room);
         });
     }
