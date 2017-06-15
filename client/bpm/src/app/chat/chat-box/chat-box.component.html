@@ -8,7 +8,7 @@
             <div *ngFor="let message of messages; let last = last"
                  [ngClass]="{'is-me': message.isMe}"
                  class="entry-message">
-                <ng-container *ngIf="last">{{scrollMessagesToBottom()}}</ng-container>
+                <!--<ng-container *ngIf="last">{{scrollMessagesToBottom()}}</ng-container>-->
                 <div class="entry-message-inner">{{message.content}}</div>
             </div>
         </div>

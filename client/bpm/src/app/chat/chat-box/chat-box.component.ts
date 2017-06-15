@@ -73,15 +73,17 @@ export class ChatBoxComponent implements OnInit, OnChanges {
     }
 
     scrollMessagesToBottom() {
-        // console.log('last', this.lastMessagesLength, 'current', this.messages.length);
-        // only auto scroll if more messages is pushed
-        if (this.lastMessagesLength !== this.messages.length) {
-            let messagesDiv: HTMLElement = this.messagesDivER.nativeElement;
+        // only auto scroll only if more messages is pushed
+        // if (this.lastMessagesLength !== this.messages.length) {
+        // let messagesDiv: HTMLElement = this.messagesDivER.nativeElement;
+        // messagesDiv.scrollTop = messagesDiv.scrollHeight;
+        // this.lastMessagesLength = this.messages.length;
+        // }
+        const thisComponent = this;
+        setTimeout(function () {
+            let messagesDiv: HTMLElement = thisComponent.messagesDivER.nativeElement;
             messagesDiv.scrollTop = messagesDiv.scrollHeight;
-            console.log(messagesDiv.scrollHeight);
-            // messagesDiv.scrollTop = 50;
-        }
-        this.lastMessagesLength = this.messages.length;
+        }, 0)
     }
 
     sendMessage() {
@@ -96,8 +98,10 @@ export class ChatBoxComponent implements OnInit, OnChanges {
     observeSocketEvents() {
         // when a message comes
         this.chatService.messagesInRoom$.subscribe(message => {
-            this.messages.push(message);
-            this.scrollMessagesToBottom();
+            if (message.room === this.chatRoom.room._id) {
+                this.messages.push(message);
+                this.scrollMessagesToBottom();
+            }
         });
     }
 }
