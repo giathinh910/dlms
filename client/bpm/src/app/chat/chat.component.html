@@ -1,8 +1,8 @@
-<bpm-chat-contact (onUserClicked)="getDirectRoom($event)"></bpm-chat-contact>
+<bpm-chat-contact (onOnlineLearnerClicked)="buildRoom($event)"></bpm-chat-contact>
 
 <bpm-chat-box
         *ngFor="let chatRoom of chatRooms; let chatRoomIndex = index"
-        [room]="chatRoom"
-        [roomIndex]="chatRoomIndex"
+        [chatRoom]="chatRoom"
+        [chatRoomIndex]="chatRoomIndex"
         (onCloseButtonClicked)="removeChatBox($event)"
 ></bpm-chat-box>

@@ -47,6 +47,7 @@ module.exports = function (io) {
 function handleLearnerChat(socket) {
     console.log('an learner connected');
 
+    /*=== WHEN INITIALIZING ===*/
     // request init data
     socket.on('request init data for learner', function () {
         socket.emit('respond init data for learner', {
@@ -58,18 +59,19 @@ function handleLearnerChat(socket) {
     var decoded = jwt.decode(socket.request._query['token'], {complete: true}),
         decodedUser = decoded.payload;
 
-    // check if learner is online
+    // check if learner is existed
     var onlineLearnerIndex = _.findIndex(onlineLearners, function (onlineLearner) {
         return onlineLearner.user._id === decodedUser._id;
     });
 
     // case learner hasn't existed, create new
     if (onlineLearnerIndex === -1) {
-        onlineLearners.push({
+        var onlineLearner = {
             sockets: [socket.id],
             user: decodedUser
-        });
-        socket.broadcast.emit('a learner comes online', decodedUser);
+        };
+        onlineLearners.push(onlineLearner);
+        socket.broadcast.emit('a learner comes online', onlineLearner);
         console.log('a learner comes online');
     }
     // case learner existed, just push socket id
@@ -78,6 +80,27 @@ function handleLearnerChat(socket) {
     }
 
     console.log('online learners', util.inspect(onlineLearners, {showHidden: false, depth: null}));
+
+
+    /*=== CHAT TIME  ===*/
+    socket.on('learner wants to join room', function (roomId) {
+        socket.join(roomId);
+    });
+
+    socket.on('learner says in room', function (message) {
+        // announce the receiver in case he online && isn't in room yet (auto popup chat box)
+        var onlineLearnerIndex = _.findIndex(onlineLearners, function (onlineLearner) {
+            return onlineLearner.user._id === message.receiver._id;
+        });
+        if (onlineLearnerIndex !== -1) {
+            onlineLearners[onlineLearnerIndex].sockets.forEach(function (socketId) {
+                socket.to(socketId).emit('a learner says', message);
+            })
+        }
+        // send message to room
+        socket.to(message.room).emit('learner says in room', message);
+    });
+
 
     /*=== WHEN THIS LEARNER GOES OFFLINE ===*/
     socket.on('disconnect', function () {

@@ -2,7 +2,7 @@
     <div (click)="onHeaderClick()" class="entry-header d-flex justify-content-between">
         <div class="entry-title">
             <i [ngClass]="{'is-gray': !connectionStatus, 'is-green': connectionStatus}" class="fa fa-comments"></i>
-            Online Users
+            Online Learners
         </div>
         <!--<a class="entry-close" href="#">&times;</a>-->
     </div>
@@ -10,10 +10,10 @@
         <div class="entry-contact-list">
             <div class="entry-contact-list-title">Contact</div>
             <div class="entry-scroll">
-                <ng-container *ngFor="let onlineUser of onlineLearners">
-                    <div *ngIf="onlineUser.user._id !== storageService.getUserId()" (click)="onUserClick(onlineUser)" class="entry-contact">
+                <ng-container *ngFor="let onlineLearner of onlineLearners">
+                    <div *ngIf="onlineLearner.user._id !== storageService.getUserId()" (click)="buildChatBox(onlineLearner)" class="entry-contact">
                         <div class="entry-avatar"><img src="./assets/images/avatar-placeholder.png" alt=""></div>
-                        <div class="entry-name">{{onlineUser.user.displayName}}</div>
+                        <div class="entry-name">{{onlineLearner.user.displayName}}</div>
                         <span class="entry-status is-online"></span>
                     </div>
                 </ng-container>

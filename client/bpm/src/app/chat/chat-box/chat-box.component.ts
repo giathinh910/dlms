@@ -1,6 +1,7 @@
 import { Component, ElementRef, EventEmitter, Input, OnChanges, OnInit, Output, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { StorageService } from "../../global/services/storage.service";
+import { ChatService } from "../services/chat.service";
 
 @Component({
     selector: 'bpm-chat-box',
@@ -10,43 +11,45 @@ import { StorageService } from "../../global/services/storage.service";
 export class ChatBoxComponent implements OnInit, OnChanges {
     displayState = true;
     @ViewChild('messagesDiv') private messagesDivER: ElementRef;
-    @Input() room: any;
-    @Input() private roomIndex: number;
+    @Input() chatRoom: any;
+    @Input() private chatRoomIndex: number;
     @Output() onCloseButtonClicked = new EventEmitter<any>();
     cssRight: number;
     chatForm: FormGroup;
     messages = [];
+    lastMessagesLength = 0;
 
-    constructor(private formBuilder: FormBuilder,
+    constructor(private chatService: ChatService,
+                private formBuilder: FormBuilder,
                 private storageService: StorageService) {
     }
 
     ngOnInit() {
+        this.observeSocketEvents();
+
         this.calculatePosition();
 
         this.chatForm = this.formBuilder.group({
             content: ['', Validators.required],
-            room: this.room._id,
-            user: this.storageService.getUserId(),
-            isMe: true
+            room: this.chatRoom.room._id,
+            user: this.formBuilder.group({
+                _id: this.storageService.getUserId(),
+                displayName: this.storageService.getUserDisplayName(),
+            }),
+            receiver: this.formBuilder.group(this.chatRoom.onlineLearner)
         });
+
+        this.chatService.emitLearnerWantToJoinRoom(this.chatRoom.room._id);
 
         let thisComponent = this;
         setTimeout(function () {
             thisComponent.messages = [
                 {content: 'Hello, I\'m doe'},
-                {content: 'Hello cai loz', isMe: true},
-                {content: 'Hello, I\'m doe'},
-                {content: 'Hello cai loz', isMe: true},
-                {content: 'Hello, I\'m doe'},
-                {content: 'Hello cai loz', isMe: true},
-                {content: 'Hello, I\'m doe'},
-                {content: 'Hello cai loz', isMe: true},
-                {content: 'Hello, I\'m doe'},
-                {content: 'Hello cai loz', isMe: true},
-                {content: 'Hello, I\'m doe'},
-                {content: 'Hello cai loz', isMe: true},
+                {content: 'Hello cai loz', isMe: true}
             ];
+            if (thisComponent.chatRoom.extraMessage)
+                thisComponent.messages.push(thisComponent.chatRoom.extraMessage);
+            thisComponent.lastMessagesLength = thisComponent.messages.length;
         }, 0);
     }
 
@@ -55,7 +58,7 @@ export class ChatBoxComponent implements OnInit, OnChanges {
     }
 
     calculatePosition() {
-        this.cssRight = (this.roomIndex + 1) * 18 + 1; //rem
+        this.cssRight = (this.chatRoom.chatRoomIndex + 1) * 18 + 1; //rem
     }
 
     onHeaderClick() {
@@ -63,19 +66,35 @@ export class ChatBoxComponent implements OnInit, OnChanges {
     }
 
     onCloseButtonClick($event) {
-        this.onCloseButtonClicked.emit(this.room);
+        this.onCloseButtonClicked.emit(this.chatRoom.room);
         $event.preventDefault();
         $event.stopPropagation();
     }
 
     scrollMessagesToBottom() {
-        let messagesDiv: HTMLElement = this.messagesDivER.nativeElement;
-        messagesDiv.scrollTop = messagesDiv.scrollHeight;
+        console.log('last', this.lastMessagesLength, 'current', this.messages.length);
+        // only auto scroll if more messages is pushed
+        if (this.lastMessagesLength !== this.messages.length) {
+            let messagesDiv: HTMLElement = this.messagesDivER.nativeElement;
+            messagesDiv.scrollTop = messagesDiv.scrollHeight;
+            this.lastMessagesLength = this.messages.length;
+        }
     }
 
     sendMessage() {
-        this.messages.push(this.chatForm.value);
+        let message = this.chatForm.value;
+        this.chatService.emitLearnerSay(message);
+        message.isMe = true;
+        this.messages.push(message);
         this.scrollMessagesToBottom();
         this.chatForm.controls['content'].reset();
+    }
+
+    observeSocketEvents() {
+        // when a message comes
+        this.chatService.messagesInRoom$.subscribe(message => {
+            this.messages.push(message);
+            this.scrollMessagesToBottom();
+        });
     }
 }

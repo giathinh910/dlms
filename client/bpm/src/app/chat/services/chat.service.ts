@@ -14,8 +14,11 @@ export class ChatService {
     private chatSocketUrl = environment.chatSocketUrl;
     private socket;
 
-    private messages = new Subject<any>();
-    messages$ = this.messages.asObservable();
+    private someLearnerMessages = new Subject<any>();
+    someLearnerMessages$ = this.someLearnerMessages.asObservable();
+
+    private messagesInRoom = new Subject<any>();
+    messagesInRoom$ = this.messagesInRoom.asObservable();
 
     private socketStatus = new Subject<boolean>();
     socketStatus$ = this.socketStatus.asObservable();
@@ -23,11 +26,11 @@ export class ChatService {
     private initData = new Subject<any>();
     initData$ = this.initData.asObservable();
 
-    private aCustomerComesOnline = new Subject<any>();
-    aCustomerComesOnline$ = this.aCustomerComesOnline.asObservable();
+    private aLearnerComesOnline = new Subject<any>();
+    aLearnerComesOnline$ = this.aLearnerComesOnline.asObservable();
 
-    private aCustomerComesOffline = new Subject<any>();
-    aCustomerComesOffline$ = this.aCustomerComesOffline.asObservable();
+    private aLearnerComesOffline = new Subject<any>();
+    aLearnerComesOffline$ = this.aLearnerComesOffline.asObservable();
 
     constructor(private storageService: StorageService,
                 private http: AuthHttp) {
@@ -73,19 +76,29 @@ export class ChatService {
 
         socket.on('a learner comes online', (data) => {
             socket.emit('a learner comes online', data);
-            this.aCustomerComesOnline.next(data);
+            this.aLearnerComesOnline.next(data);
         });
 
         socket.on('a learner comes offline', (data) => {
             socket.emit('a learner comes offline', data);
-            this.aCustomerComesOffline.next(data);
+            this.aLearnerComesOffline.next(data);
         });
 
-        socket.on('learner says', (data) => this.messages.next(data));
+        socket.on('learner says in room', (data) => this.messagesInRoom.next(data));
+
+        socket.on('a learner says', (data) => this.someLearnerMessages.next(data));
     }
 
     emitRequestInitData() {
         this.socket.emit('request init data for learner');
+    }
+
+    emitLearnerWantToJoinRoom(roomId) {
+        this.socket.emit('learner wants to join room', roomId);
+    }
+
+    emitLearnerSay(message) {
+        this.socket.emit('learner says in room', message);
     }
 
     closeSocket() {
