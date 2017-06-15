@@ -3,12 +3,13 @@
         <div class="entry-title"><i class="fa fa-comments"></i> {{chatRoom.room.displayName}}</div>
         <a (click)="onCloseButtonClick($event); $event.preventDefault()" class="entry-close" href="#">&times;</a>
     </div>
-    <div *ngIf="displayState" class="entry-collapse">
+    <div [ngClass]="{'d-none': !displayState}" class="entry-collapse">
         <div #messagesDiv class="entry-messages">
             <div *ngFor="let message of messages; let last = last"
-                 [ngClass]="{'is-me': message.isMe}" class="entry-message">
-                <div class="entry-message-inner">{{message.content}}</div>
+                 [ngClass]="{'is-me': message.isMe}"
+                 class="entry-message">
                 <ng-container *ngIf="last">{{scrollMessagesToBottom()}}</ng-container>
+                <div class="entry-message-inner">{{message.content}}</div>
             </div>
         </div>
         <div class="entry-message-sender">

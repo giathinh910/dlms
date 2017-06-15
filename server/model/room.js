@@ -59,7 +59,7 @@ Room.createOrGetDirectRoom = function (data, callback) {
                 .findOne({
                     isDirectRoom: true,
                     users: {
-                        $in: data.usersInRoom
+                        $all: data.usersInRoom // matching regardless of order
                     }
                 })
                 .exec(function (err, room) {
@@ -86,17 +86,14 @@ Room.createOrGetDirectRoom = function (data, callback) {
             })
         }
     ], function (err, room) {
-        if (err === 'RoomExisted')
-            User.findById(data.learnerIdToChat, function (err, user) {
-                if (err)
-                    callback(err, null);
-                else {
-                    room.displayName = user.displayName;
-                    callback(null, room);
-                }
-            });
-        else
-            callback(err, room);
+        User.findById(data.learnerIdToChat, function (err, user) {
+            if (err)
+                callback(err, null);
+            else {
+                room.displayName = user.displayName;
+                callback(null, room);
+            }
+        });
     });
 };
 

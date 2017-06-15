@@ -12,7 +12,7 @@ export class ChatContactComponent implements OnInit {
     connectionStatus = false;
     displayState = false;
     @Output() onOnlineLearnerClicked = new EventEmitter<any>();
-    onlineLearners: any[] = [];
+    onlineLearners = [];
 
     constructor(private chatService: ChatService,
                 public storageService: StorageService) {
@@ -26,13 +26,13 @@ export class ChatContactComponent implements OnInit {
         this.displayState = !this.displayState;
     }
 
-    buildChatBox(onlineLearner, extraMessage?) {
+    buildOrGetChatBox(onlineLearner, extraMessage?) {
         this.chatService.createOrGetRoom(onlineLearner.user._id).then(room => {
             let newChatRoomData = {
                 room: room,
                 onlineLearner: onlineLearner.user
             };
-            newChatRoomData['extraMessage'] = extraMessage ? extraMessage : null;
+            newChatRoomData['extraMessage'] = extraMessage ? extraMessage : null; // for auto popup chat box
             this.onOnlineLearnerClicked.emit(newChatRoomData);
         });
     }
@@ -41,6 +41,11 @@ export class ChatContactComponent implements OnInit {
         // when connect / disconnect
         this.chatService.socketStatus$.subscribe(socketStatus => {
             this.connectionStatus = socketStatus;
+            // reset online learner if lost connection
+            if (!socketStatus)
+                this.onlineLearners = [];
+            else
+                this.chatService.emitRequestInitData();
         });
 
         // when initial data comes
@@ -57,8 +62,9 @@ export class ChatContactComponent implements OnInit {
         // when learner comes offline
         this.chatService.aLearnerComesOffline$.subscribe(learnerComesOffline => {
             const learnerIndex = _.findIndex(this.onlineLearners, function (onlineLearner) {
-                return learnerComesOffline._id === onlineLearner.user._id;
+                return learnerComesOffline.user._id === onlineLearner.user._id;
             });
+            console.log('learnerIndex', learnerIndex);
             this.onlineLearners.splice(learnerIndex, 1);
         });
     }

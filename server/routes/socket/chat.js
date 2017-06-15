@@ -120,7 +120,7 @@ function handleLearnerChat(socket) {
 
         // if sum of socket id of that learner equals 0, then remove that user (come offline)
         if (onlineLearners[onlineLearnerIndex].sockets.length === 0) {
-            socket.broadcast.emit('a learner comes offline', onlineLearners[onlineLearnerIndex].user);
+            socket.broadcast.emit('a learner comes offline', onlineLearners[onlineLearnerIndex]);
             onlineLearners.splice(onlineLearnerIndex, 1);
         }
 

@@ -33,11 +33,11 @@ export class ChatComponent implements OnInit {
     }
 
     buildRoom(roomData) {
-        const chatUserIndex = _.findIndex(this.chatRooms, function (chatRoom) {
-            return roomData.room._id === chatRoom._id;
+        const chatRoomIndex = _.findIndex(this.chatRooms, function (chatRoom) {
+            return roomData.room._id === chatRoom.room._id;
         });
         // only create new chat box if not existed
-        if (chatUserIndex === -1) {
+        if (chatRoomIndex === -1) {
             // allow maximum 3 chat boxes
             if (this.chatRooms.length === 3) {
                 this.chatRooms.splice(this.chatRooms.length - 1, 1);
@@ -49,10 +49,10 @@ export class ChatComponent implements OnInit {
     }
 
     removeChatBox(user) {
-        const chatUserIndex = _.findIndex(this.chatRooms, function (chatUser) {
+        const chatRoomIndex = _.findIndex(this.chatRooms, function (chatUser) {
             return user._id === chatUser._id;
         });
-        this.chatRooms.splice(chatUserIndex, 1);
+        this.chatRooms.splice(chatRoomIndex, 1);
     }
 
     observeSocketEvents() {
@@ -69,7 +69,7 @@ export class ChatComponent implements OnInit {
                 const learnerIndex = _.findIndex(this.chatContact.onlineLearners, function (onlineLearner) {
                     return message.user._id === onlineLearner.user._id;
                 });
-                this.chatContact.buildChatBox(this.chatContact.onlineLearners[learnerIndex], message);
+                this.chatContact.buildOrGetChatBox(this.chatContact.onlineLearners[learnerIndex], message);
             }
         })
     }

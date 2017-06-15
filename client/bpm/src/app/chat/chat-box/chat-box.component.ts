@@ -14,7 +14,7 @@ export class ChatBoxComponent implements OnInit, OnChanges {
     @Input() chatRoom: any;
     @Input() private chatRoomIndex: number;
     @Output() onCloseButtonClicked = new EventEmitter<any>();
-    cssRight: number;
+    cssRight = 0;
     chatForm: FormGroup;
     messages = [];
     lastMessagesLength = 0;
@@ -44,9 +44,10 @@ export class ChatBoxComponent implements OnInit, OnChanges {
         let thisComponent = this;
         setTimeout(function () {
             thisComponent.messages = [
-                {content: 'Hello, I\'m doe'},
-                {content: 'Hello cai loz', isMe: true}
+                // {content: 'Hello, I\'m doe'},
+                // {content: 'Hello cai loz', isMe: true}
             ];
+            // for auto pop up message box
             if (thisComponent.chatRoom.extraMessage)
                 thisComponent.messages.push(thisComponent.chatRoom.extraMessage);
             thisComponent.lastMessagesLength = thisComponent.messages.length;
@@ -58,7 +59,7 @@ export class ChatBoxComponent implements OnInit, OnChanges {
     }
 
     calculatePosition() {
-        this.cssRight = (this.chatRoom.chatRoomIndex + 1) * 18 + 1; //rem
+        this.cssRight = (this.chatRoomIndex + 1) * 18 + 1; //rem
     }
 
     onHeaderClick() {
@@ -72,13 +73,15 @@ export class ChatBoxComponent implements OnInit, OnChanges {
     }
 
     scrollMessagesToBottom() {
-        console.log('last', this.lastMessagesLength, 'current', this.messages.length);
+        // console.log('last', this.lastMessagesLength, 'current', this.messages.length);
         // only auto scroll if more messages is pushed
         if (this.lastMessagesLength !== this.messages.length) {
             let messagesDiv: HTMLElement = this.messagesDivER.nativeElement;
             messagesDiv.scrollTop = messagesDiv.scrollHeight;
-            this.lastMessagesLength = this.messages.length;
+            console.log(messagesDiv.scrollHeight);
+            // messagesDiv.scrollTop = 50;
         }
+        this.lastMessagesLength = this.messages.length;
     }
 
     sendMessage() {
