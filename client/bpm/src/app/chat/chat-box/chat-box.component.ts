@@ -17,7 +17,7 @@ export class ChatBoxComponent implements OnInit, OnChanges {
     cssRight = 0;
     chatForm: FormGroup;
     messages = [];
-    lastMessagesLength = 0;
+    // lastMessagesLength = 0;
 
     constructor(private chatService: ChatService,
                 private formBuilder: FormBuilder,
@@ -39,19 +39,16 @@ export class ChatBoxComponent implements OnInit, OnChanges {
             receiver: this.formBuilder.group(this.chatRoom.onlineLearner)
         });
 
+        //
         this.chatService.emitLearnerWantToJoinRoom(this.chatRoom.room._id);
 
-        let thisComponent = this;
-        setTimeout(function () {
-            thisComponent.messages = [
-                // {content: 'Hello, I\'m doe'},
-                // {content: 'Hello cai loz', isMe: true}
-            ];
-            // for auto pop up message box
-            if (thisComponent.chatRoom.extraMessage)
-                thisComponent.messages.push(thisComponent.chatRoom.extraMessage);
-            thisComponent.lastMessagesLength = thisComponent.messages.length;
-        }, 0);
+        // display messages of this room
+        this.messages = this.chatRoom.messages;
+        this.scrollMessagesToBottom();
+
+        // for auto pop up message box
+        // if (this.chatRoom.extraMessage)
+        //     this.messages.push(this.chatRoom.extraMessage);
     }
 
     ngOnChanges() {
@@ -70,6 +67,10 @@ export class ChatBoxComponent implements OnInit, OnChanges {
         this.onCloseButtonClicked.emit(this.chatRoom.room);
         $event.preventDefault();
         $event.stopPropagation();
+    }
+
+    isMyMessage(message) {
+        return message.isMe || (message.createdBy && message.createdBy._id === this.storageService.getUserId());
     }
 
     scrollMessagesToBottom() {

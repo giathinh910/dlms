@@ -32,25 +32,33 @@ export class ChatComponent implements OnInit {
         this.observeSocketEvents();
     }
 
-    buildRoom(roomData) {
+    buildRoom(onlineLearner) {
+        // find if chat room exist
         const chatRoomIndex = _.findIndex(this.chatRooms, function (chatRoom) {
-            return roomData.room._id === chatRoom.room._id;
+            return onlineLearner.user._id === chatRoom.onlineLearner._id;
         });
         // only create new chat box if not existed
         if (chatRoomIndex === -1) {
-            // allow maximum 3 chat boxes
-            if (this.chatRooms.length === 3) {
-                this.chatRooms.splice(this.chatRooms.length - 1, 1);
-                this.chatRooms.unshift(roomData);
-            } else {
-                this.chatRooms.push(roomData);
-            }
+            this.chatService.createOrGetRoom(onlineLearner.user._id).then(roomAndMessages => {
+                let newChatRoomData = {
+                    room: roomAndMessages.room,
+                    messages: roomAndMessages.messages,
+                    onlineLearner: onlineLearner.user
+                };
+                // allow maximum 3 chat boxes
+                if (this.chatRooms.length === 3) {
+                    this.chatRooms.splice(this.chatRooms.length - 1, 1);
+                    this.chatRooms.unshift(newChatRoomData);
+                } else {
+                    this.chatRooms.push(newChatRoomData);
+                }
+            });
         }
     }
 
-    removeChatBox(user) {
-        const chatRoomIndex = _.findIndex(this.chatRooms, function (chatUser) {
-            return user._id === chatUser._id;
+    removeChatBox(room) {
+        const chatRoomIndex = _.findIndex(this.chatRooms, function (chatRoom) {
+            return room._id === chatRoom._id;
         });
         this.chatRooms.splice(chatRoomIndex, 1);
     }
@@ -65,11 +73,11 @@ export class ChatComponent implements OnInit {
 
             // auto pop chat box up only if chat box hasn't existed && found learner in contact list
             if (roomIndex === -1) {
-                // find online user index
+                // find online learner index
                 const learnerIndex = _.findIndex(this.chatContact.onlineLearners, function (onlineLearner) {
                     return message.user._id === onlineLearner.user._id;
                 });
-                this.chatContact.buildOrGetChatBox(this.chatContact.onlineLearners[learnerIndex], message);
+                this.chatContact.buildOrGetChatBox(this.chatContact.onlineLearners[learnerIndex]);
             }
         })
     }

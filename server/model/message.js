@@ -24,6 +24,15 @@ var messageSchema = new Schema(
 
 var Message = mongoose.model('Message', messageSchema);
 
-//
+Message.createOne = function (data, callback) {
+    var message = {
+        createdBy: data.createdBy,
+        room: data.room,
+        content: data.content
+    };
+    Message.create(message, function (err, r) {
+        callback(err, r);
+    })
+};
 
 module.exports = Message;

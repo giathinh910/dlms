@@ -8,10 +8,11 @@
     </div>
     <div *ngIf="displayState" class="entry-collapse">
         <div class="entry-contact-list">
-            <div class="entry-contact-list-title">Contact</div>
+            <!--<div class="entry-contact-list-title">Contact</div>-->
             <div class="entry-scroll">
                 <ng-container *ngFor="let onlineLearner of onlineLearners">
-                    <div *ngIf="onlineLearner.user._id !== storageService.getUserId()" (click)="buildOrGetChatBox(onlineLearner)" class="entry-contact">
+                    <div *ngIf="showOnlineLearner(onlineLearner)"
+                         (click)="buildOrGetChatBox(onlineLearner)" class="entry-contact">
                         <div class="entry-avatar"><img src="./assets/images/avatar-placeholder.png" alt=""></div>
                         <div class="entry-name">{{onlineLearner.user.displayName}}</div>
                         <span class="entry-status is-online"></span>
@@ -21,7 +22,7 @@
         </div>
         <div class="entry-search">
             <div class="entry-form">
-                <input type="text" placeholder="Search contact ...">
+                <input (keyup)="searchOnlineLearner($event)" type="text" placeholder="Search contact ...">
                 <button><i class="fa fa-search"></i></button>
             </div>
         </div>

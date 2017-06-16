@@ -4,6 +4,8 @@ var config = require('../../config');
 var _ = require('lodash');
 var util = require('util');
 
+var MessageModel = require('../../model/message');
+
 var onlineLearners = [
     // {
     //     sockets: [],
@@ -37,8 +39,8 @@ module.exports = function (io) {
     });
 
     io.of('/ws/chat').on('connect', function (socket) {
-        var decoded = jwt.decode(socket.request._query['token'], {complete: true}),
-            decodedUser = decoded.payload;
+        // var decoded = jwt.decode(socket.request._query['token'], {complete: true}),
+        //     decodedUser = decoded.payload;
 
         handleLearnerChat(socket);
     });
@@ -88,17 +90,31 @@ function handleLearnerChat(socket) {
     });
 
     socket.on('learner says in room', function (message) {
-        // announce the receiver in case he online && isn't in room yet (auto popup chat box)
-        var onlineLearnerIndex = _.findIndex(onlineLearners, function (onlineLearner) {
-            return onlineLearner.user._id === message.receiver._id;
-        });
-        if (onlineLearnerIndex !== -1) {
-            onlineLearners[onlineLearnerIndex].sockets.forEach(function (socketId) {
-                socket.to(socketId).emit('a learner says', message);
-            })
-        }
         // send message to room
         socket.to(message.room).emit('learner says in room', message);
+
+        // save message to db
+        MessageModel.createOne({
+            createdBy: decodedUser._id,
+            room: message.room,
+            content: message.content
+        }, function (err, r) {
+            if (err)
+                socket.emit('save message failed', r);
+            else {
+                socket.emit('save message success', r);
+
+                // announce the receiver in case he online && isn't in room yet (auto popup chat box). Place in this callback to make sure when popup appears the latest message is saved success
+                var onlineLearnerIndex = _.findIndex(onlineLearners, function (onlineLearner) {
+                    return onlineLearner.user._id === message.receiver._id;
+                });
+                if (onlineLearnerIndex !== -1) {
+                    onlineLearners[onlineLearnerIndex].sockets.forEach(function (socketId) {
+                        socket.to(socketId).emit('a learner says', message);
+                    })
+                }
+            }
+        })
     });
 
 

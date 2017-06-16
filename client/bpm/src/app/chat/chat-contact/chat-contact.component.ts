@@ -26,15 +26,8 @@ export class ChatContactComponent implements OnInit {
         this.displayState = !this.displayState;
     }
 
-    buildOrGetChatBox(onlineLearner, extraMessage?) {
-        this.chatService.createOrGetRoom(onlineLearner.user._id).then(room => {
-            let newChatRoomData = {
-                room: room,
-                onlineLearner: onlineLearner.user
-            };
-            newChatRoomData['extraMessage'] = extraMessage ? extraMessage : null; // for auto popup chat box
-            this.onOnlineLearnerClicked.emit(newChatRoomData);
-        });
+    buildOrGetChatBox(onlineLearner) {
+        this.onOnlineLearnerClicked.emit(onlineLearner);
     }
 
     observeSocketEvents() {
@@ -53,19 +46,38 @@ export class ChatContactComponent implements OnInit {
             this.onlineLearners = data.onlineLearners;
         });
 
-        // when learner comes online
+        // when a learner comes online
         this.chatService.aLearnerComesOnline$.subscribe(learnerWhichComesOnline => {
             this.onlineLearners.unshift(learnerWhichComesOnline);
-
         });
 
-        // when learner comes offline
+        // when a learner comes offline
         this.chatService.aLearnerComesOffline$.subscribe(learnerComesOffline => {
             const learnerIndex = _.findIndex(this.onlineLearners, function (onlineLearner) {
                 return learnerComesOffline.user._id === onlineLearner.user._id;
             });
-            console.log('learnerIndex', learnerIndex);
             this.onlineLearners.splice(learnerIndex, 1);
         });
+    }
+
+    searchOnlineLearner($event) {
+        const searchTerm = $event.target.value.toLowerCase();
+        if (searchTerm.length === 0) { // reset search
+            for (let i in this.onlineLearners) {
+                this.onlineLearners[i].searchVisible = true;
+            }
+        } else {
+            for (let i in this.onlineLearners) {
+                let displayName = this.onlineLearners[i].user.displayName.toLowerCase();
+                this.onlineLearners[i].searchVisible = displayName.indexOf(searchTerm) > -1;
+            }
+        }
+    }
+
+    showOnlineLearner(onlineLearner) {
+        const isMe = onlineLearner.user._id === this.storageService.getUserId();
+        const searchVisible = typeof onlineLearner.searchVisible === 'undefined' || onlineLearner.searchVisible;
+
+        return !isMe && searchVisible;
     }
 }

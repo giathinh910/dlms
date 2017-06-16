@@ -41,7 +41,7 @@ export class ChatService {
      ============================================================= */
     createOrGetRoom(learnerIdToChat: any): Promise<any> {
         return this.http
-            .post(`${this.apiUrl}/rooms/create-or-get-direct-room`, {learnerIdToChat: learnerIdToChat})
+            .post(`${this.apiUrl}/rooms/find-or-create-direct-room`, {learnerIdToChat: learnerIdToChat})
             .toPromise()
             .then(res => res.json())
             .catch(this.handleError);

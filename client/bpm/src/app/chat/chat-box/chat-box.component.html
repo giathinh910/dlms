@@ -6,7 +6,7 @@
     <div [ngClass]="{'d-none': !displayState}" class="entry-collapse">
         <div #messagesDiv class="entry-messages">
             <div *ngFor="let message of messages; let last = last"
-                 [ngClass]="{'is-me': message.isMe}"
+                 [ngClass]="{'is-me': isMyMessage(message)}"
                  class="entry-message">
                 <!--<ng-container *ngIf="last">{{scrollMessagesToBottom()}}</ng-container>-->
                 <div class="entry-message-inner">{{message.content}}</div>

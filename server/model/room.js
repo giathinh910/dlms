@@ -3,6 +3,7 @@ var async = require('async');
 var _ = require('lodash');
 
 var User = require('./user');
+var Message = require('./message');
 
 var Schema = mongoose.Schema;
 
@@ -46,7 +47,7 @@ Room.getOneByCustomerId = function (customerId, callback) {
 };
 
 // check if room existed, if it did, return room, else create room
-Room.createOrGetDirectRoom = function (data, callback) {
+Room.findOrCreateDirectRoom = function (data, callback) {
     if (data.reqUserId === data.learnerIdToChat) {
         callback({
             error: 'TuKyAhDcm'
@@ -54,7 +55,7 @@ Room.createOrGetDirectRoom = function (data, callback) {
         return;
     }
     async.waterfall([
-        function (callback) {
+        function (callback) { // check if room existed
             Room
                 .findOne({
                     isDirectRoom: true,
@@ -73,7 +74,7 @@ Room.createOrGetDirectRoom = function (data, callback) {
                     }
                 })
         },
-        function (foo, callback) {
+        function (foo, callback) { // if room hasn't existed, create a new one
             Room.create({
                 name: '',
                 users: data.usersInRoom,
@@ -86,13 +87,36 @@ Room.createOrGetDirectRoom = function (data, callback) {
             })
         }
     ], function (err, room) {
-        User.findById(data.learnerIdToChat, function (err, user) {
-            if (err)
-                callback(err, null);
-            else {
-                room.displayName = user.displayName;
-                callback(null, room);
+        async.parallel({
+            room: function (callback) {
+                User.findById(data.learnerIdToChat, function (err, user) {
+                    if (err)
+                        callback(err, null);
+                    else {
+                        room.displayName = user.displayName;
+                        callback(null, room);
+                    }
+                });
+            },
+            messages: function (callback) {
+                Message
+                    .find({
+                        room: room._id
+                    })
+                    .populate('createdBy')
+                    .exec(function (err, messages) {
+                        if (err)
+                            callback(err, null);
+                        else {
+                            if (!messages)
+                                callback(null, []);
+                            else
+                                callback(null, messages)
+                        }
+                    })
             }
+        }, function (err, roomAndMessages) {
+            callback(err, roomAndMessages);
         });
     });
 };
