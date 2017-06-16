@@ -7,6 +7,7 @@ export class StorageService {
         userId: 'userId',
         userEmail: 'userEmail',
         userDisplayName: 'userDisplayName',
+        contactBoxVisibility: 'contactBoxVisibility'
     };
 
     constructor() {
@@ -53,6 +54,15 @@ export class StorageService {
         return localStorage.getItem(this.storageKeys.userDisplayName);
     }
 
+    // Contact box show/hide
+    setContactBoxVisibility(state) {
+        localStorage.setItem(this.storageKeys.contactBoxVisibility, state);
+    }
+
+    getContactBoxVisibility() {
+        return localStorage.getItem(this.storageKeys.contactBoxVisibility);
+    }
+
     // Mass update
     setUser(user: any) {
         if (user.token) {
@@ -61,6 +71,7 @@ export class StorageService {
         this.setUserId(user._id);
         this.setUserEmail(user.email);
         this.setUserDisplayName(user.displayName);
+        this.setContactBoxVisibility('hide');
     }
 
     // Clear

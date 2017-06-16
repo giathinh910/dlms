@@ -20,10 +20,12 @@ export class ChatContactComponent implements OnInit {
 
     ngOnInit() {
         this.observeSocketEvents();
+        this.displayState = this.storageService.getContactBoxVisibility() === 'show';
     }
 
     onHeaderClick() {
         this.displayState = !this.displayState;
+        this.storageService.setContactBoxVisibility(this.displayState ? 'show' : 'hide');
     }
 
     buildOrGetChatBox(onlineLearner) {
