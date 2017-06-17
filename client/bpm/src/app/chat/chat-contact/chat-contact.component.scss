@@ -23,6 +23,12 @@
       line-height: ptr(30);
       i {
         margin-right: 5px;
+        &.is-gray {
+          color: #bbbbbb;
+        }
+        &.is-green {
+          color: #5cb85c;
+        }
       }
     }
     .entry-close {
@@ -103,17 +109,6 @@
         background: transparent;
         color: $gray-light
       }
-    }
-  }
-}
-
-.entry-title {
-  i {
-    &.is-gray {
-      color: #bbbbbb;
-    }
-    &.is-green {
-      color: #0df959;
     }
   }
 }

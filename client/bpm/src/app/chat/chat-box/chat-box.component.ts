@@ -42,13 +42,9 @@ export class ChatBoxComponent implements OnInit, OnChanges {
         //
         this.chatService.emitLearnerWantToJoinRoom(this.chatRoom.room._id);
 
-        // display messages of this room
+        // fetch messages for this room
         this.messages = this.chatRoom.messages;
         this.scrollMessagesToBottom();
-
-        // for auto pop up message box
-        // if (this.chatRoom.extraMessage)
-        //     this.messages.push(this.chatRoom.extraMessage);
     }
 
     ngOnChanges() {
@@ -64,7 +60,7 @@ export class ChatBoxComponent implements OnInit, OnChanges {
     }
 
     onCloseButtonClick($event) {
-        this.onCloseButtonClicked.emit(this.chatRoom.room);
+        this.onCloseButtonClicked.emit(this.chatRoomIndex);
         $event.preventDefault();
         $event.stopPropagation();
     }

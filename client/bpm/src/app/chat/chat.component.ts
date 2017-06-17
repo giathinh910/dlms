@@ -56,10 +56,7 @@ export class ChatComponent implements OnInit {
         }
     }
 
-    removeChatBox(room) {
-        const chatRoomIndex = _.findIndex(this.chatRooms, function (chatRoom) {
-            return room._id === chatRoom._id;
-        });
+    removeChatBox(chatRoomIndex) {
         this.chatRooms.splice(chatRoomIndex, 1);
     }
 

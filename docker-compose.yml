@@ -21,6 +21,7 @@ services:
       - "mongo"
     environment:
       - DEBUG=server:*
+      - NODE_ENV=development
     networks:
       - isolated-network
   bpm:

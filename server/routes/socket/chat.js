@@ -26,7 +26,7 @@ module.exports = function (io) {
         var token = handshakeData._query['token'];
         try {
             var user = jwt.verify(token, config.jwt.secret);
-            console.log('socket handshake established');
+            // console.log('socket handshake established');
             if (user)
                 next();
         } catch (err) {
@@ -47,7 +47,7 @@ module.exports = function (io) {
 };
 
 function handleLearnerChat(socket) {
-    console.log('an learner connected');
+    // console.log('an learner connected');
 
     /*=== WHEN INITIALIZING ===*/
     // request init data
@@ -74,14 +74,14 @@ function handleLearnerChat(socket) {
         };
         onlineLearners.push(onlineLearner);
         socket.broadcast.emit('a learner comes online', onlineLearner);
-        console.log('a learner comes online');
+        // console.log('a learner comes online');
     }
     // case learner existed, just push socket id
     else {
         onlineLearners[onlineLearnerIndex].sockets.push(socket.id)
     }
 
-    console.log('online learners', util.inspect(onlineLearners, {showHidden: false, depth: null}));
+    // console.log('online learners', util.inspect(onlineLearners, {showHidden: false, depth: null}));
 
 
     /*=== CHAT TIME  ===*/
@@ -117,10 +117,9 @@ function handleLearnerChat(socket) {
         })
     });
 
-
     /*=== WHEN THIS LEARNER GOES OFFLINE ===*/
     socket.on('disconnect', function () {
-        console.log('a learner disconnected', socket.id);
+        // console.log('a learner disconnected', socket.id);
 
         // find the online learner by socket.id
         var onlineLearnerIndex = _.findIndex(onlineLearners, function (onlineLearner) {
@@ -140,6 +139,6 @@ function handleLearnerChat(socket) {
             onlineLearners.splice(onlineLearnerIndex, 1);
         }
 
-        console.log('learners', util.inspect(onlineLearners, {showHidden: false, depth: null}));
+        // console.log('online learners', util.inspect(onlineLearners, {showHidden: false, depth: null}));
     });
 }
