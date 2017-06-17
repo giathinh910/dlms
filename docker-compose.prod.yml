@@ -1,0 +1,21 @@
+version: "3"
+networks:
+  isolated-network:
+services:
+  mongo:
+    ports:
+      - "27017:27017"
+  server:
+    build:
+      context: ./server
+      dockerfile: Dockerfile.prod
+    ports:
+      - "8000:3000"
+    environment:
+      - NODE_ENV=production
+  bpm:
+    build:
+      context: ./client/bpm
+      dockerfile: Dockerfile.prod
+    ports:
+      - "80:4200"
